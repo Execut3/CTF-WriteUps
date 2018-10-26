@@ -4,6 +4,18 @@
 
 ### Solution
 
+By looking at encryptor.py, we know that:
+
+- key is 5 characters (10 hex)
+
+- flag starts with ```flag{```, so we can find key by bruting over first 10 hex values of encrypted in the file.
+
+- after finding the key, we should find next values of flag, one by one simply by bruting over printable characters (It's a simple for over printable ascii's)
+
+- Remember flag values should contain lower values.
+
+Here is the solution:
+
 ```python
 #!/usr/bin/env python2
 import string, itertools
@@ -11,6 +23,7 @@ import string, itertools
 from itertools import cycle as scooter
 from hashlib import sha384
 
+# We know this is first 5 characters of flag.
 flag = "flag{"
 
 characters = '0123456789abcdef'
@@ -52,5 +65,6 @@ for i in range(len(encrypted)/2+1):
 	for j in characters:
 		if enc(key, flag+j.lower()) == enc_tmp:
 			flag += j.lower()
+			
 print("flag is: {}".format(flag.lower()))
 ```
