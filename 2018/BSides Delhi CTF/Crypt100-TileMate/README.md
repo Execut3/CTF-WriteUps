@@ -1,4 +1,4 @@
-## TIle Mate
+## Tile Mate
 
 **Category:** Crypto **Points:** 100
 
