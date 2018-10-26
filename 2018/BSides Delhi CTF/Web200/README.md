@@ -96,7 +96,7 @@ So after working on challenge manually, this solution came to mind
 
 - create a temp user value with same size of func. then move this text one by one to right and each time do the same functionality xor to it. (I mean the exact functionallity that authencation system is using, by xoring a user input value with a func variable.) 
 
-- Each time you're doing this, store the key. which is 9 characters at the position of that key. (you should fix offsets. for example if it's in the second iteration, key should be like this x<key>xxxx and so on.)
+- Each time you're doing this, store the key. which is 9 characters at the position of that key. (you should fix offsets. for example if it's in the second iteration, key should be like this ```x<key>xxxx``` and so on.)
 
 - Now again provide this key to the provided code at challenge and print output
 
