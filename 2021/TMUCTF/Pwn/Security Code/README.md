@@ -59,7 +59,7 @@ Hello our dear admin, AAAA0x41414141
 As u can see the value `AAAA` that we provided, is overwriten in location offset `%15$n`.
 This is our start point.
 
-### The rest detail of explit is written on codes below. Will try to make it more details later.
+### I tried to put more comments on exploit code below, But will try to make this writeup with more details later.
 
 The final exploit code to receive the flag:
 
