@@ -35,6 +35,19 @@ $ readelf -a securitycode | grep security_code
     66: 0804c03c     4 OBJECT  GLOBAL DEFAULT   26 security_code
 ```
 
+The procedure to exploit is as follow:
+
+- First send A value to program, so it will redirect us into `hello_admin`
+
+- Next We should write value in location of `security_code` to make condition pass. 
+New value should be `0xABADCAFE`
+
+- After that we will be leaded to `auth_admin`, But by default it will not show us flag.
+Again we should do another `format string` exploit and try to read of memory value of flag.
+
+- There is a limitation on reading value in this step, so we should read 6 string of flag at a time, 
+and provide an offset on location we are reading in next hit.
+
 ### Writeup is not completed, will be completed with more details
 
 Here is the final exploit code to receive the flag:
