@@ -26,7 +26,7 @@ test
 :(
 ```
 
-We can see it will get an input from us and print some character. Looking in provided files, `Vuln.class` look interesting.
+We can see that, it get an input from us and will print some characters in screen. Looking in provided files, `Vuln.class` look interesting.
 Opening this file with `bytecode viewer` will give us following source code:
 
 ```java
@@ -60,13 +60,13 @@ public class Vuln
 }
 ```
 
-Also there is a hint provided in challenge. `https://www.bsi.bund.de/SharedDocs/Cybersicherheitswarnungen/DE/2021/2021-549032-10F2.pdf?__blob=publicationFile&v=6`.
-Opening this link we will see that it mentioned to vulnerability `CVE-2021-44228` which is vulnerability in Apache Log4j library.
+Also there is a hint provided in the challenge that points to link: `https://www.bsi.bund.de/SharedDocs/Cybersicherheitswarnungen/DE/2021/2021-549032-10F2.pdf?__blob=publicationFile&v=6`.
+Opening this link we will see that it is mentioning to vulnerability `CVE-2021-44228` which is vulnerability in Log4j library.
 
-Knowing these, It is kind of straight forward to do what next. We need to use this vuln, and try to gain RCE with log4j vulnerability.
+Knowing this, it is kind of obvious what should we do now. We need to use this vuln, and try to gain RCE or Read flag with this vulnerability.
 
 #### POC
-To check if this vulnerability exists, will send following code:
+Here is the POC for existance of this vulnerability:
 
 ```bash
 $ nc 65.108.176.77 1337
@@ -82,14 +82,14 @@ ${jndi:ldap://127.0.0.1/test}
 ....
 ```
 
-Which is giving us exception which proof this vuln exists. Also as u can see it is giving connection refused.
+Which is giving us exception that proves this vuln exists. Also as u can see it is giving connection refused.
 So if we have a ldap server, and send request to it we can create a reverse shell using following guideline:
 
 ```https://sysdig.com/blog/exploit-detect-mitigate-log4j-cve/```
 
-But I did tried different RCE Methods and tried to make a reverse shell with nc, did tried `curl`, `wget` and many other commands to get response in ldap server. but none works.
+I did tried many RCE Methods, tried to make a reverse shell with nc, did tried `curl`, `wget` and many other commands to get response in ldap server. but none of them works.
 
-So tried to check `Dockerfile` see if there is anything useful in there. Checking Dockerfile, the last line seem to be interesting:
+So tried to check `Dockerfile` see if there is anything useful. Checking Dockerfile, the last line seem to be interesting:
 
 ```bash
 CMD ynetd -np y -lm -1 -lpid 64 -lt 10 -t 30 "FLAG='$(cat /flag.txt)' /home/ctf/run.sh"
